@@ -119,7 +119,7 @@ public class ReacharoundPlacing extends Feature {
 				BlockPos pos = take2Res.getBlockPos().down();
 				IBlockState state = world.getBlockState(pos);
 
-				if (player.posY - pos.getY() > 1 && (world.isAirBlock(pos) || state.getBlock().isReplaceable(world, pos)) && (Loader.isModLoaded("nolavabuild") && !Block.isEqualTo(state.getBlock(), Blocks.LAVA)))
+				if (player.posY - pos.getY() > 1 && (world.isAirBlock(pos) || state.getBlock().isReplaceable(world, pos)) && !(Loader.isModLoaded("nolavabuild") && Block.isEqualTo(state.getBlock(), Blocks.LAVA)))
 					return pos;
 			}
 		}
