@@ -63,21 +63,23 @@ public class DoubleDoors extends Feature {
 			return;
 
 		World world = event.getWorld();
-		IBlockState state = world.getBlockState(event.getPos()).getActualState(world, event.getPos());
+		IBlockState state = world.getBlockState(event.getPos());
 		Block block = state.getBlock();
 
 		if (!(block instanceof BlockDoor))
 			return;
 
-		EnumFacing direction = state.getValue(BlockDoor.FACING);
-		boolean isOpen = state.getValue(BlockDoor.OPEN);
-		BlockDoor.EnumHingePosition isMirrored = state.getValue(BlockDoor.HINGE);
+		IBlockState actualState = state.getActualState(world, event.getPos());
+
+		EnumFacing direction = actualState.getValue(BlockDoor.FACING);
+		boolean isOpen = actualState.getValue(BlockDoor.OPEN);
+		BlockDoor.EnumHingePosition isMirrored = actualState.getValue(BlockDoor.HINGE);
 
 		BlockPos mirrorPos = event.getPos().offset(isMirrored == BlockDoor.EnumHingePosition.RIGHT ? direction.rotateYCCW() : direction.rotateY());
-		BlockPos doorPos = state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER ? mirrorPos : mirrorPos.down();
+		BlockPos doorPos = actualState.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER ? mirrorPos : mirrorPos.down();
 		IBlockState other = world.getBlockState(doorPos).getActualState(world, doorPos);
 
-		if (state.getMaterial() != Material.IRON && other.getBlock() == block && other.getValue(BlockDoor.FACING) == direction && other.getValue(BlockDoor.OPEN) == isOpen && other.getValue(BlockDoor.HINGE) != isMirrored) {
+		if (actualState.getMaterial() != Material.IRON && other.getBlock() == block && other.getValue(BlockDoor.FACING) == direction && other.getValue(BlockDoor.OPEN) == isOpen && other.getValue(BlockDoor.HINGE) != isMirrored) {
 
 			IBlockState newState = other.cycleProperty(BlockDoor.OPEN);
 			world.setBlockState(doorPos, newState, 10);
