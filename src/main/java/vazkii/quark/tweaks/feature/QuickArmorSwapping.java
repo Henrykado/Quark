@@ -10,6 +10,7 @@
  */
 package vazkii.quark.tweaks.feature;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -29,9 +30,13 @@ public class QuickArmorSwapping extends Feature {
 
 	@SubscribeEvent
 	public void onEntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event) {
+		Entity target = event.getTarget();
 		EntityPlayer player = event.getEntityPlayer();
 
-		if (event.getTarget().world.isRemote || player.isSpectator() || player.isCreative() || !(event.getTarget() instanceof EntityArmorStand))
+		if (target == null || player == null)
+			return;
+
+		if (target.world.isRemote || player.isSpectator() || player.isCreative() || !(target instanceof EntityArmorStand))
 			return;
 
 		if (player.isSneaking()) {
