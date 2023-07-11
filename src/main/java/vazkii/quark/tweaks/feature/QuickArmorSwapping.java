@@ -10,22 +10,39 @@
  */
 package vazkii.quark.tweaks.feature;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import vazkii.quark.base.module.Feature;
+import vazkii.quark.base.util.ItemMetaHelper;
 
 public class QuickArmorSwapping extends Feature {
 
 	public static boolean offhandSwapping;
+	private static String[] tempBlacklist;
+	public static Set<Pair<Item, Integer>> armorBlacklist;
 
 	@Override
 	public void setupConfig() {
 		offhandSwapping = loadPropBool("Swap off-hand with armor", "", true);
+		tempBlacklist = loadPropStringList("Armor Blacklist", "Armor that should be prevented from being quick-swapped\n" + "Format is modid:item[:meta]", new String[] {});
+	}
+
+	@Override
+	public void postPreInit() {
+		armorBlacklist = ItemMetaHelper.getFromStringArray("armor swapping blacklist item", tempBlacklist).stream()
+			.filter(i -> !i.isEmpty())
+			.map(s -> Pair.of(s.getItem(), s.getMetadata()))
+			.collect(Collectors.toSet());
 	}
 
 	@SubscribeEvent
@@ -54,7 +71,11 @@ public class QuickArmorSwapping extends Feature {
 
 	private void swapSlot(EntityPlayer player, EntityArmorStand armorStand, EntityEquipmentSlot slot) {
 		ItemStack playerItem = player.getItemStackFromSlot(slot);
+		if (armorBlacklist.contains(Pair.of(playerItem.getItem(), playerItem.getMetadata())))
+			return;
 		ItemStack armorStandItem = armorStand.getItemStackFromSlot(slot);
+		if (armorBlacklist.contains(Pair.of(armorStandItem.getItem(), armorStandItem.getMetadata())))
+			return;
 		player.setItemStackToSlot(slot, armorStandItem);
 		armorStand.setItemStackToSlot(slot, playerItem);
 	}
