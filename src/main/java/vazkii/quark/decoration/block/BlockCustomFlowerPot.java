@@ -144,6 +144,8 @@ public class BlockCustomFlowerPot extends BlockFlowerPot implements IBlockColorP
 		return state;
 	}
 
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {}
 
 	/*
 	 * Comparator
