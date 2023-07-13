@@ -5,17 +5,17 @@ buildscript {
         maven { url = "https://maven.minecraftforge.net" }
     }
     dependencies {
-        classpath('com.github.DStrand1:ForgeGradle:FG_2.3-SNAPSHOT') {
-            changing = true
-        }
+        classpath('net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT')
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven-publish'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 ext.configFile = file('build.properties')
 
@@ -30,6 +30,7 @@ if (System.getenv().BUILD_NUMBER != null) {
 }
 
 repositories {
+    mavenCentral()
     maven {
         url= "https://oss.sonatype.org/content/repositories/public/"
     }
@@ -50,6 +51,13 @@ repositories {
 }
 
 dependencies {
+    // implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    // implementation 'org.apache.commons:commons-lang3:3.12.0'
+    // implementation 'com.google.guava:guava:32.1.0-jre'
+    // implementation 'com.google.code.gson:gson:2.10.1'
+    // implementation 'io.netty:netty-buffer:4.1.94.Final'
+    // implementation 'org.lwjgl.lwjgl:lwjgl:2.9.3'
+
     deobfCompile "vazkii.autoreglib:AutoRegLib:${config.arl_version}"
     // compile "baubles:Baubles:1.12:1.5.2" // w/ baubles
     compileOnly "baubles:Baubles:1.12:1.5.2" // w/o baubles
