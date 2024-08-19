@@ -54,7 +54,7 @@ public class Backpacks extends Feature {
 
 	public static ItemBackpack backpack;
 	
-	public static boolean superOpMode, enableTrades, enableCrafting, enablePickUp;
+	public static boolean superOpMode, enableTrades, enableCrafting, enablePickUp, ignoreShiftClick;
 
 	public static  int leatherCount, minEmeralds, maxEmeralds;
 	
@@ -70,6 +70,7 @@ public class Backpacks extends Feature {
 		enableCrafting = loadPropBool("Enable Crafting", "Set this to true to enable a crafting recipe", false);
 		enablePickUp = loadPropBool("Enable Backpack Pick-Up", "Set this to true to allow items to be picked up into backpacks when the main inventory is full", false);
 		superOpMode = loadPropBool("Unbalanced Mode", "Set this to true to allow the backpacks to be unequipped even with items in them", false);
+		ignoreShiftClick = loadPropBool("Backpack Ignores Shift-Clicking", "Set this to true to make shift-clicking inventory items send them to the hotbar instead of the backpack", false);
 		leatherCount = loadPropInt("Required Leather", "", 12);
 		minEmeralds = loadPropInt("Min Required Emeralds", "", 12);
 		maxEmeralds = loadPropInt("Max Required Emeralds", "", 18);
